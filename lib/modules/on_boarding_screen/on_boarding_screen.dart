@@ -15,15 +15,15 @@ class onBoardingScreen extends StatefulWidget {
 class _onBoardingScreenState extends State<onBoardingScreen> {
   List<BoardingModel> boarding = [
     BoardingModel(
-        image: 'assets/images/onBoard1.png',
+        image: 'assets/images/onboard1.png',
         title: 'On Board 1 Title',
         body: 'OnBoard 1 Body'),
     BoardingModel(
-        image: 'assets/images/onBoard2.png',
+        image: 'assets/images/onboard2.png',
         title: 'On Board 2 Title',
         body: 'OnBoard 2 Body'),
     BoardingModel(
-        image: 'assets/images/onBoard3.png',
+        image: 'assets/images/onboard3.png',
         title: 'On Board 3 Title',
         body: 'OnBoard 3 Body'),
   ];
@@ -35,7 +35,14 @@ class _onBoardingScreenState extends State<onBoardingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        actions: [
+          TextButton(onPressed: (){
+            navigateAndFinish(context, LoginScreen());
+          },
+              child: Text('SKIP',style: TextStyle(color: defaultColor),)),
+        ],
+      ),
       body: Padding(
         padding: const EdgeInsets.all(30.0),
         child: Column(
@@ -86,7 +93,7 @@ class _onBoardingScreenState extends State<onBoardingScreen> {
                         milliseconds: 750
                     ), curve: Curves.fastLinearToSlowEaseIn);
                   },
-                  child: Icon(Icons.arrow_forward),
+                  child: Icon(Icons.arrow_forward_ios_outlined,color: Colors.white,),
                 ),
               ],
             ),
