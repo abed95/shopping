@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
         theme: lightTheme,
         darkTheme: darkTheme,
         themeMode: ThemeMode.light,
-        home:  onBoardingScreen(),
+        home:  OnBoardingScreen(),
       );
   }
 }

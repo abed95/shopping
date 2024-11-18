@@ -68,7 +68,7 @@ ThemeData lightTheme = ThemeData(
     backgroundColor: Colors.white,
   ),
   floatingActionButtonTheme: FloatingActionButtonThemeData(
-    backgroundColor: Colors.white,
+    backgroundColor: defaultColor,
 
   ),
   textTheme: TextTheme(

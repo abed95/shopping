@@ -7,12 +7,12 @@ import '../../shared/components/components.dart';
 import '../../shared/styles/colors.dart';
 import '../login_screen/login_screen.dart';
 
-class onBoardingScreen extends StatefulWidget {
+class OnBoardingScreen extends StatefulWidget {
   @override
-  State<onBoardingScreen> createState() => _onBoardingScreenState();
+  State<OnBoardingScreen> createState() => _OnBoardingScreenState();
 }
 
-class _onBoardingScreenState extends State<onBoardingScreen> {
+class _OnBoardingScreenState extends State<OnBoardingScreen> {
   List<BoardingModel> boarding = [
     BoardingModel(
         image: 'assets/images/onboard1.png',
