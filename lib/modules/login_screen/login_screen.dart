@@ -21,7 +21,7 @@ class LoginScreen extends StatelessWidget {
     return BlocConsumer<ShopLoginCubit,ShopLoginStates>(
       listener: (context,state){
         if(state is ShopLoginSuccessState){
-          if(state.loginModel?.status!=null)
+          if(state.loginModel?.status == true)
           {
             print({'The state is :',state});
             print({'The Status of request is :',state.loginModel?.status});
@@ -75,7 +75,6 @@ class LoginScreen extends StatelessWidget {
                               return 'You must enter an email';
                             }
                           },
-
                         ),
                         SizedBox(
                           height: 15,

@@ -1,6 +1,6 @@
-import 'package:bloc/bloc.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shoping/layouts/shop_layout/cubit_home/cubit_home.dart';
+import 'package:shoping/layouts/shop_layout/shop_home_layout.dart';
 import 'package:shoping/modules/login_screen/cubit_login/cubit_login.dart';
 import 'package:shoping/modules/login_screen/login_screen.dart';
 import 'package:shoping/shared/components/bloc_observer.dart';
@@ -16,29 +16,47 @@ void main() async{
   DioHelper.init();
   await CacheHelper.init();
 
-  bool? isDark = CacheHelper.getData(key: 'isDark');
-  bool? onboarding = CacheHelper.getData(key: 'onBoarding');
-  runApp(MyApp(onBoarding: onboarding,isDark: isDark,));
+  Widget widget;
+  bool isDark = CacheHelper.getData(key: 'isDark') ?? false;
+  bool onboarding = CacheHelper.getData(key: 'onBoarding') ?? false;
+  String token = CacheHelper.getData(key: 'token') ?? '';
+  if (onboarding) {
+    widget = (token.isNotEmpty) ? ShopHomeLayout() : LoginScreen();
+    print('Start Widget: $widget');
+
+  } else {
+    widget = OnBoardingScreen();
+    print('Start Widget: $widget');
+
+  }
+
+  runApp(
+      MyApp(
+    startWidget: widget,
+        isDark: isDark,
+      )
+  );
 }
 
 class MyApp extends StatelessWidget {
-  final bool? onBoarding;
+  final Widget startWidget;
   final bool? isDark;
 
-  const MyApp({super.key, required this.onBoarding, required this.isDark});
+  const MyApp({required this.startWidget, required this.isDark});
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (context)=> ShopLoginCubit()),
+        BlocProvider(create: (context)=> HomeCubit()),
       ],
       child: MaterialApp(
           debugShowCheckedModeBanner: false,
           theme: lightTheme,
           darkTheme: darkTheme,
           themeMode: ThemeMode.light,
-          home:  onBoarding! ? LoginScreen(): OnBoardingScreen(),
+          home:  startWidget,
         ),
     );
   }
