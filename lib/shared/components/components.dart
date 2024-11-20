@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shoping/shared/styles/colors.dart';
 import '../../models/boarding_model.dart';
 
@@ -35,7 +36,11 @@ void navigateAndFinish(context, widget) => Navigator.pushAndRemoveUntil(
       MaterialPageRoute(builder: (context) => widget),
       (Route<dynamic> route) => false,
     );
-void navigateTo(context,widget)=>Navigator.push(context, widget);
+void navigateTo(context, widget) => Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => widget,
+    ));
 
 Widget titleText ({required String title,context}) => Text(
       title,
@@ -109,3 +114,38 @@ Widget editTextForm({
       validator: validator,
       enabled: isClickable,
     );
+
+void showToast({
+  required String? message,
+  required ToastStates state,
+})=>
+    Fluttertoast.showToast(
+    msg: message,
+    toastLength: Toast.LENGTH_LONG,
+    gravity: ToastGravity.BOTTOM,
+    timeInSecForIosWeb: 5,
+    backgroundColor: chooseToastColor(state),
+    textColor: Colors.white,
+    fontSize: 16.0
+);
+
+//enum
+enum ToastStates{SUCCESS,ERROR,WARNING}
+
+Color chooseToastColor(ToastStates state){
+
+  Color color;
+
+  switch(state){
+    case ToastStates.SUCCESS:
+      color = Colors.green;
+      break;
+    case ToastStates.ERROR:
+      color = Colors.red;
+      break;
+    case ToastStates.WARNING:
+      color = Colors.amber;
+      break;
+  }
+  return color;
+}

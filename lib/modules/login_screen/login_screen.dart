@@ -2,10 +2,14 @@ import 'package:conditional_builder_null_safety/conditional_builder_null_safety.
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:shoping/layouts/shop_layout/shop_home_layout.dart';
 import 'package:shoping/modules/login_screen/cubit_login/cubit_login.dart';
 import 'package:shoping/modules/login_screen/cubit_login/states_login.dart';
 import 'package:shoping/modules/register_screen/register_screen.dart';
 import 'package:shoping/shared/components/components.dart';
+import 'package:shoping/shared/networks/local/cache_helper.dart';
+import 'package:shoping/shared/styles/colors.dart';
 
 class LoginScreen extends StatelessWidget {
   var emailController = TextEditingController();
@@ -14,22 +18,46 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-        create: (BuildContext context)=>ShopLoginCubit(),
-      child: BlocConsumer<ShopLoginCubit,ShopLoginStates>(
-        listener: (context,state){},
-        builder: (context,state){
-          return Scaffold(
-            appBar: AppBar(),
-            body: SingleChildScrollView(
-              child: Center(
+    return BlocConsumer<ShopLoginCubit,ShopLoginStates>(
+      listener: (context,state){
+        if(state is ShopLoginSuccessState){
+          if(state.loginModel?.status!=null)
+          {
+            print({'The state is :',state});
+            print({'The Status of request is :',state.loginModel?.status});
+            CacheHelper.saveData(
+                key: 'token',
+                value: state.loginModel?.data?.token,).then((onValue){
+                  navigateAndFinish(context, ShopHomeLayout(),);
+                  showToast(message: state.loginModel?.message, state: ToastStates.SUCCESS);
+            }).catchError((onError){
+              print({'The error is :',onError});
+            });
+          }else{
+            print({'The Status of request is :',state});
+            showToast(
+                state: ToastStates.ERROR,
+                message: state.loginModel?.message,
+            );
+          }
+        }
+      },
+      builder: (context,state){
+        return Scaffold(
+          appBar: AppBar(),
+          body: GestureDetector(
+            onTap: (){
+              FocusScope.of(context).unfocus();
+            },
+            child: Center(
+              child: SingleChildScrollView(
                 child: Padding(
                   padding: const EdgeInsets.all(20.0),
                   child: Form(
                     key: formKey,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
                       children: [
                         titleText(title: 'LOGIN', context: context),
                         bodyText(
@@ -47,6 +75,7 @@ class LoginScreen extends StatelessWidget {
                               return 'You must enter an email';
                             }
                           },
+
                         ),
                         SizedBox(
                           height: 15,
@@ -82,6 +111,7 @@ class LoginScreen extends StatelessWidget {
                           builder: (context)=>defaultButton(
                             function: () {
                               print('inside Button');
+                              FocusScope.of(context).unfocus();
                               if(formKey.currentState!.validate()){
                               ShopLoginCubit.get(context).userLogin(
                                   email: emailController.text,
@@ -91,12 +121,13 @@ class LoginScreen extends StatelessWidget {
                               },
                             text: 'login',
                           ),
-                          fallback: (context)=>Center(child: CircularProgressIndicator()),
+                          fallback: (context)=>Center(child: CircularProgressIndicator(color: defaultColor,),),
                         ),
                         Row(
                           children: [
                             bodyText(body: 'Don\'t have an account?', context: context),
                             buttonText(text: 'register now', context: context,function: (){
+                              print('register button taped');
                               navigateTo(context, RegisterScreen());
                             }),
                           ],
@@ -107,9 +138,9 @@ class LoginScreen extends StatelessWidget {
                 ),
               ),
             ),
-          );
-        },
-    ),
-    );
+          ),
+        );
+      },
+        );
   }
 }

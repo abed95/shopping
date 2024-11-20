@@ -1,6 +1,6 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shoping/shared/networks/local/cache_helper.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import '../../models/boarding_model.dart';
 import '../../shared/components/components.dart';
@@ -37,10 +37,12 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
     return Scaffold(
       appBar: AppBar(
         actions: [
-          TextButton(onPressed: (){
-            navigateAndFinish(context, LoginScreen());
-          },
-              child: Text('SKIP',style: TextStyle(color: defaultColor),)),
+          TextButton(
+              onPressed: onSkip,
+              child: Text(
+                'SKIP',
+                style: TextStyle(color: defaultColor),
+              )),
         ],
       ),
       body: Padding(
@@ -50,15 +52,15 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
             Expanded(
               child: PageView.builder(
                 controller: boardController,
-                onPageChanged: (int index){
-                  if(index == boarding.length -1){
+                onPageChanged: (int index) {
+                  if (index == boarding.length - 1) {
                     setState(() {
                       isLast = true;
                     });
                     print('last');
-                  }else{
+                  } else {
                     setState(() {
-                      isLast =false;
+                      isLast = false;
                     });
                     print('not last');
                   }
@@ -74,7 +76,8 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
             ),
             Row(
               children: [
-                SmoothPageIndicator(controller: boardController,
+                SmoothPageIndicator(
+                    controller: boardController,
                     effect: ExpandingDotsEffect(
                       dotColor: Colors.grey,
                       activeDotColor: defaultColor,
@@ -87,13 +90,20 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                 Spacer(),
                 FloatingActionButton(
                   onPressed: () {
-                    if(isLast){
-                      navigateAndFinish(context,LoginScreen());                      }
-                    boardController.nextPage(duration: Duration(
-                        milliseconds: 750
-                    ), curve: Curves.fastLinearToSlowEaseIn);
+                    if (isLast) {
+                      onSkip();
+                    }
+                    boardController.nextPage(
+                        duration: Duration(
+                          milliseconds: 750,
+                        ),
+                        curve: Curves.fastLinearToSlowEaseIn,
+                    );
                   },
-                  child: Icon(Icons.arrow_forward_ios_outlined,color: Colors.white,),
+                  child: Icon(
+                    Icons.arrow_forward_ios_outlined,
+                    color: Colors.white,
+                  ),
                 ),
               ],
             ),
@@ -101,5 +111,14 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
         ),
       ),
     );
+  }
+
+  void onSkip() {
+    CacheHelper.saveData(key: 'onBoarding', value: true).then((onValue) {
+      if (onValue != null) {
+        navigateAndFinish(context, LoginScreen());
+      }
+    }).catchError((onError) {});
+    navigateAndFinish(context, LoginScreen());
   }
 }
