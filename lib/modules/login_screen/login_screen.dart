@@ -2,8 +2,7 @@ import 'package:conditional_builder_null_safety/conditional_builder_null_safety.
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:shoping/layouts/shop_layout/shop_home_layout.dart';
+import 'package:shoping/layouts/shop_layout/home_layout.dart';
 import 'package:shoping/modules/login_screen/cubit_login/cubit_login.dart';
 import 'package:shoping/modules/login_screen/cubit_login/states_login.dart';
 import 'package:shoping/modules/register_screen/register_screen.dart';
@@ -28,7 +27,7 @@ class LoginScreen extends StatelessWidget {
             CacheHelper.saveData(
                 key: 'token',
                 value: state.loginModel?.data?.token,).then((onValue){
-                  navigateAndFinish(context, ShopHomeLayout(),);
+                  navigateAndFinish(context, HomeLayout(),);
                   showToast(message: state.loginModel?.message, state: ToastStates.SUCCESS);
             }).catchError((onError){
               print({'The error is :',onError});

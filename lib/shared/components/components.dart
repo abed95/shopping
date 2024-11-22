@@ -36,6 +36,7 @@ void navigateAndFinish(context, widget) => Navigator.pushAndRemoveUntil(
       MaterialPageRoute(builder: (context) => widget),
       (Route<dynamic> route) => false,
     );
+
 void navigateTo(context, widget) => Navigator.push(
     context,
     MaterialPageRoute(
@@ -47,7 +48,8 @@ Widget titleText ({required String title,context}) => Text(
       style: Theme.of(context).textTheme.titleLarge,
     );
 
-Widget bodyText ({required String body,context})=> Text(body,style: Theme.of(context).textTheme.bodyMedium,);
+Widget bodyText ({required String body, context})=>
+    Text(body,style: Theme.of(context).textTheme.bodyMedium,);
 
 Widget buttonText ({required String text,function,context})=> TextButton(onPressed: function,
         child: Text(
