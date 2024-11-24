@@ -12,6 +12,7 @@ class ShopLoginCubit extends Cubit<ShopLoginStates>{
   ShopLoginCubit() : super(ShopLoginInitialState());
 
   static ShopLoginCubit get(context) => BlocProvider.of(context);
+
   LoginModel? loginModel;
 
   void userLogin({
@@ -36,16 +37,13 @@ class ShopLoginCubit extends Cubit<ShopLoginStates>{
       emit(ShopLoginErrorState(error.toString()));
     });
   }
-
+  //Change Password Visibility
   IconData suffix = Icons.remove_red_eye;
   bool isPassword = true;
   void changePasswordVisibility(){
     isPassword = !isPassword;
     suffix = isPassword? Icons.remove_red_eye : Icons.remove_red_eye_outlined;
-
     emit(ShopChangePasswordVisibilityState());
-
-
   }
 
 }

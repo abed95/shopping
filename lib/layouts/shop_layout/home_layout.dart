@@ -1,26 +1,65 @@
 import 'package:flutter/material.dart';
-
-import '../../modules/login_screen/login_screen.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shoping/layouts/shop_layout/cubit_home/cubit_home.dart';
+import 'package:shoping/layouts/shop_layout/cubit_home/home_states.dart';
+import 'package:shoping/modules/search/search_screen.dart';
 import '../../shared/components/components.dart';
-import '../../shared/networks/local/cache_helper.dart';
 
-class HomeLayout extends StatelessWidget{
+class HomeLayout extends StatelessWidget {
+  const HomeLayout({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Saallaa'),
-      ),
-      body: Center(
-        child: TextButton(onPressed: ((){
-          CacheHelper.removeData(key: 'token').then((onValue){
-            if(onValue){
-              navigateAndFinish(context, LoginScreen());
-            }
-          });
+    return BlocConsumer<HomeCubit, HomeStates>(
+      listener: (context, state) {},
+      builder: (context, state) {
+        var cubit = HomeCubit.get(context);
+        return Scaffold(
 
-        }), child: Text('Logout')),
-      ),
+          appBar: AppBar(
+            title: const Text('Salla',),
+            actions: [
+              IconButton(
+                onPressed: () {
+                  navigateTo(context, SearchScreen());
+                },
+                icon: const Icon(
+                  Icons.search,
+                ),
+              ),
+            ],
+          ),
+          body: cubit.bottomScreens[cubit.currentIndex],
+          bottomNavigationBar: BottomNavigationBar(
+            onTap: (index) {
+              cubit.changeBottomNav(index);
+            },
+            currentIndex: cubit.currentIndex,
+            items: const [
+              BottomNavigationBarItem(
+                  icon: Icon(
+                    Icons.home,
+                  ),
+                  label: 'Home'),
+              BottomNavigationBarItem(
+                  icon: Icon(
+                    Icons.apps,
+                  ),
+                  label: 'Categories'),
+              BottomNavigationBarItem(
+                  icon: Icon(
+                    Icons.favorite_border_outlined,
+                  ),
+                  label: 'Favorites'),
+              BottomNavigationBarItem(
+                  icon: Icon(
+                    Icons.settings,
+                  ),
+                  label: 'Setting'),
+            ],
+          ),
+        );
+      },
     );
   }
 }
