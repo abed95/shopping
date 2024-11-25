@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shoping/shared/styles/colors.dart';
+import '../../layouts/shop_layout/cubit_home/cubit_home.dart';
 import '../../models/boarding_model.dart';
 
 Widget buildBoardingItem(BoardingModel model) => Column(
@@ -161,5 +162,104 @@ Widget myDivider() => Padding(
     width: double.infinity,
     height: 1,
     color: Colors.grey[300],
+  ),
+);
+
+//Build List Product Item
+Widget buildProductItem(model, context, {bool isOldPrice = true})=>Padding(
+  padding: const EdgeInsets.all(20.0),
+  child: SizedBox(
+    height: 120,
+    child: Row(
+      children: [
+        Stack(
+            alignment: AlignmentDirectional.bottomStart,
+            children: [
+              Image(
+                image: NetworkImage(
+                  model!.image ?? '',
+                ),
+                width: 120,
+                height: 120,
+                fit: BoxFit.cover,
+              ),
+              if (model.discount != 0 && isOldPrice)
+                Container(
+                  color: Colors.red,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 5,
+                  ),
+                  child: const Text(
+                    'Discount',
+                    style: TextStyle(
+                      fontSize: 8.0,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+            ]),
+        SizedBox(width: 20,),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                model.name ?? '',
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                  fontSize: 14,
+                  height: 1.3,
+                ),
+              ),
+              Spacer(),
+              Row(
+                children: [
+                  Text(
+                    '${model.price.round()}',
+                    style: const TextStyle(
+                      fontSize: 12,
+                      color: defaultColor,
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  if (model.discount != 0 && isOldPrice)
+                    Text(
+                      '${model.oldPrice.round()}',
+                      style: const TextStyle(
+                        fontSize: 10,
+                        color: Colors.grey,
+                        decoration: TextDecoration.lineThrough,
+                      ),
+                    ),
+                  const Spacer(),
+                  IconButton(
+                    onPressed: () {
+                      HomeCubit.get(context).changeFavorites(model.id);
+                      print(model.id);
+                    },
+                    padding: EdgeInsets.zero,
+                    icon: CircleAvatar(
+                      radius: 15,
+                      backgroundColor:
+                      HomeCubit.get(context).favorite[model.id] ?? false
+                          ? defaultColor
+                          : Colors.grey,
+                      child: const Icon(
+                        Icons.favorite_border_outlined,
+                        size: 14,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ],
+    ),
   ),
 );
