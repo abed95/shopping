@@ -1,4 +1,5 @@
 import 'package:shoping/models/change_favorite_mode.dart';
+import 'package:shoping/models/login_model.dart';
 
 abstract class HomeStates{}
 class HomeInitialState extends HomeStates{}
@@ -39,6 +40,25 @@ class GetFavoritesLoadingState extends HomeStates{}
 class GetFavoritesErrorState extends HomeStates {
   final String error;
   GetFavoritesErrorState(this.error);
+}
+
+// User States
+class GetUserSuccessState extends HomeStates{
+  final LoginModel? userModel;
+  GetUserSuccessState(this.userModel);
+}
+class GetUserLoadingState extends HomeStates{}
+class GetUserErrorState extends HomeStates {
+  final String error;
+  GetUserErrorState(this.error);
+}
+
+//Setting States
+class SettingSuccessState extends HomeStates{}
+class SettingLoadingState extends HomeStates{}
+class SettingErrorState extends HomeStates {
+  final String error;
+  SettingErrorState(this.error);
 }
 
 

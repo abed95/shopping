@@ -6,6 +6,7 @@ import 'package:shoping/models/categories_model.dart';
 import 'package:shoping/models/change_favorite_mode.dart';
 import 'package:shoping/models/favorite_model.dart';
 import 'package:shoping/models/home_model.dart';
+import 'package:shoping/models/login_model.dart';
 import 'package:shoping/modules/categories/categories_screen.dart';
 import 'package:shoping/modules/favorites/favorites_screen.dart';
 import 'package:shoping/modules/products/products_screen.dart';
@@ -115,4 +116,19 @@ class HomeCubit extends Cubit<HomeStates> {
     });
   }
 
+
+  LoginModel? userModel;
+  void getUserData() {
+    emit(GetUserLoadingState());
+    DioHelper.getData(
+      url: PROFILE,
+      token: token,
+    ).then((onValue) {
+      userModel = LoginModel.fromJson(onValue.data);
+      emit(GetUserSuccessState(userModel));
+    }).catchError((onError) {
+      emit(GetUserErrorState(onError.toString()));
+      print(onError.toString());
+    });
+  }
 }

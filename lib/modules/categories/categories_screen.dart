@@ -1,9 +1,11 @@
+import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shoping/layouts/shop_layout/cubit_home/cubit_home.dart';
 import 'package:shoping/layouts/shop_layout/cubit_home/home_states.dart';
 import 'package:shoping/models/categories_model.dart';
 import 'package:shoping/shared/components/components.dart';
+import 'package:shoping/shared/styles/colors.dart';
 
 class CategoriesScreen extends StatelessWidget {
 
@@ -13,10 +15,16 @@ class CategoriesScreen extends StatelessWidget {
       listener: (context,state){},
       builder: (context,state){
         var cubit = HomeCubit.get(context);
-        return ListView.separated(
-          itemBuilder: (context,index)=>buildCatItem(cubit.categoriesModel!.data!.data![index]),
-          separatorBuilder: (context,index)=>myDivider(),
-          itemCount: cubit.categoriesModel!.data!.data!.length,);
+        var model = cubit.categoriesModel;
+        return ConditionalBuilder(
+          condition: model!=null,
+          builder: (context)=>ListView.separated(
+            itemBuilder: (context,index)=>buildCatItem(model.data!.data![index]),
+            separatorBuilder: (context,index)=>myDivider(),
+            itemCount: model!.data!.data!.length,),
+          fallback: (context)=>Center(child: CircularProgressIndicator(color: defaultColor,),),
+
+        );
       },
     );
   }

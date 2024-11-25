@@ -16,7 +16,7 @@ class FavoritesScreen extends StatelessWidget {
       builder: (context,state){
         var cubit = HomeCubit.get(context);
         return ConditionalBuilder(
-          condition:state is! GetFavoritesLoadingState ,
+          condition:state is! GetFavoritesLoadingState && cubit.favoriteModel!=null,
           builder:(context)=> ListView.separated(
             physics: BouncingScrollPhysics(),
             itemBuilder: (context,index)=>buildFavItem(cubit.favoriteModel!.data!.data![index],context),
@@ -108,7 +108,7 @@ Widget buildFavItem(FavoriteData model, context)=>Padding(
                     icon: CircleAvatar(
                       radius: 15,
                       backgroundColor:
-                      HomeCubit.get(context).favorite[model.id] ?? false
+                      HomeCubit.get(context).favorite[model.product!.id] ?? false
                           ? defaultColor
                           : Colors.grey,
                       child: const Icon(

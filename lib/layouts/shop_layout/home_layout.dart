@@ -48,7 +48,7 @@ class HomeLayout extends StatelessWidget {
                   label: 'Categories'),
               BottomNavigationBarItem(
                   icon: Icon(
-                    Icons.favorite_border_outlined,
+                    Icons.favorite,
                   ),
                   label: 'Favorites'),
               BottomNavigationBarItem(
