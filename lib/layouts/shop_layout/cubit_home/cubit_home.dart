@@ -131,4 +131,28 @@ class HomeCubit extends Cubit<HomeStates> {
       print(onError.toString());
     });
   }
+
+  void updateUserData({
+    required String? name,
+    required String? email,
+    required String? phone,
+}) {
+    emit(UpdateUserLoadingState());
+    DioHelper.putData(
+      url: UPDATE_PROFILE,
+      token: token,
+      data:{
+        'name':name,
+        'email':email,
+        'phone':phone,
+      }
+    ).then((onValue) {
+      userModel = LoginModel.fromJson(onValue.data);
+      emit(UpdateUserSuccessState(userModel));
+    }).catchError((onError) {
+      emit(UpdateUserErrorState(onError.toString()));
+      print(onError.toString());
+    });
+  }
+
 }

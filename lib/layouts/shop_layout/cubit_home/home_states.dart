@@ -53,6 +53,18 @@ class GetUserErrorState extends HomeStates {
   GetUserErrorState(this.error);
 }
 
+//Update User
+
+class UpdateUserSuccessState extends HomeStates{
+  final LoginModel? userModel;
+  UpdateUserSuccessState(this.userModel);
+}
+class UpdateUserLoadingState extends HomeStates{}
+class UpdateUserErrorState extends HomeStates {
+  final String error;
+  UpdateUserErrorState(this.error);
+}
+
 //Setting States
 class SettingSuccessState extends HomeStates{}
 class SettingLoadingState extends HomeStates{}
