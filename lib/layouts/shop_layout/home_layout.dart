@@ -33,7 +33,7 @@ class HomeLayout extends StatelessWidget {
               IconButton(onPressed: (){
                 cubit.changeThemeMode(fromShared: CacheHelper.getData(key: 'isDark'));
                 print(CacheHelper.getData(key: 'isDark'));
-              }, icon: isDark
+              }, icon: cubit.isDarkCubit
                   ? Icon(Icons.brightness_2,)
                   : Icon(Icons.brightness_4,),
               ),

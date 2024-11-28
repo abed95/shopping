@@ -156,24 +156,22 @@ class HomeCubit extends Cubit<HomeStates> {
       print(onError.toString());
     });
   }
-
+//Change the mode theme
   bool isDarkCubit = CacheHelper.getData(key: 'isDark');
   void changeThemeMode({bool? fromShared}){
     if(fromShared != null){
-      isDark = !fromShared;
-      isDarkCubit = isDark;
-      CacheHelper.saveData(key: 'isDark', value: isDark).then((onValue){
+      isDarkCubit = !fromShared;
+      CacheHelper.saveData(key: 'isDark', value: isDarkCubit).then((onValue){
         emit(ChangeThemeModeSuccessState());
-        print('$isDark inside if(fromShared != null) mode');
+        print('$isDarkCubit inside if(fromShared != null) mode');
       }).catchError((onError){
         emit(ChangeThemeModeErrorState());
       });
     }else{
-      isDark = !isDark;
-      isDarkCubit = isDark;
-      CacheHelper.saveData(key: 'isDark', value: isDark).then((onValue){
+      isDarkCubit = !isDarkCubit;
+      CacheHelper.saveData(key: 'isDark', value: isDarkCubit).then((onValue){
         emit(ChangeThemeModeSuccessState());
-        print('$isDark inside then mode else');
+        print('$isDarkCubit inside then mode else');
       }).catchError((onError){
         emit(ChangeThemeModeErrorState());
       });

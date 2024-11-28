@@ -20,9 +20,8 @@ class _SplashScreenState extends State<SplashScreen> {
     Future.delayed(const Duration(seconds: 3), () {
       bool onboarding = CacheHelper.getData(key: 'onBoarding') ?? false;
       token = CacheHelper.getData(key: 'token') ?? '';
-      print('$isDark inside splash screen before get from Shared ');
-      isDark = CacheHelper.getData(key: 'isDark');
-      print('$isDark inside splash screen After get from Shared ');
+      //isDark = CacheHelper.getData(key: 'isDark');
+      // print('$isDark inside splash screen After get from Shared ');
       if (onboarding) {
         print(token);
         if (token != '') {
