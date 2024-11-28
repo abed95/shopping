@@ -14,30 +14,40 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(seconds: 3),(){
-      bool isDark = CacheHelper.getData(key: 'isDark') ?? false;
+    Future.delayed(const Duration(seconds: 3), () {
       bool onboarding = CacheHelper.getData(key: 'onBoarding') ?? false;
       token = CacheHelper.getData(key: 'token') ?? '';
+      print('$isDark inside splash screen before get from Shared ');
+      isDark = CacheHelper.getData(key: 'isDark');
+      print('$isDark inside splash screen After get from Shared ');
       if (onboarding) {
         print(token);
-        if(token!= ''){
-          navigateAndFinish(context,HomeLayout());
-        }else{
-        navigateAndFinish(context,LoginScreen());
+        if (token != '') {
+          navigateAndFinish(context, HomeLayout());
+        } else {
+          navigateAndFinish(context, LoginScreen());
         }
       } else {
         navigateAndFinish(context, OnBoardingScreen());
       }
     });
   }
+
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-      body: Center(child: Text('Splash',),),
+      body: Center(
+        child: Text(
+          'Salla',
+          style: TextStyle(
+            fontSize: 45,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
     );
   }
 }

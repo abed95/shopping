@@ -17,5 +17,5 @@ void printFullText(String text){
 }
 
 //token of user
-
 String token = '';
+bool isDark = false;

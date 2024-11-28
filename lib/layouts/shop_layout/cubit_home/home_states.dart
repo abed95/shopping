@@ -73,4 +73,6 @@ class SettingErrorState extends HomeStates {
   SettingErrorState(this.error);
 }
 
-
+//change Theme Mode
+class ChangeThemeModeSuccessState extends HomeStates{}
+class ChangeThemeModeErrorState extends HomeStates{}

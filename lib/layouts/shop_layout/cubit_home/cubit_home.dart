@@ -13,6 +13,7 @@ import 'package:shoping/modules/products/products_screen.dart';
 import 'package:shoping/modules/setting/setting_screen.dart';
 import 'package:shoping/shared/components/constants.dart';
 import 'package:shoping/shared/networks/endpoints.dart';
+import 'package:shoping/shared/networks/local/cache_helper.dart';
 import 'package:shoping/shared/networks/remote/dio_helper.dart';
 
 class HomeCubit extends Cubit<HomeStates> {
@@ -148,6 +149,7 @@ class HomeCubit extends Cubit<HomeStates> {
       }
     ).then((onValue) {
       userModel = LoginModel.fromJson(onValue.data);
+      print('inside update then ');
       emit(UpdateUserSuccessState(userModel));
     }).catchError((onError) {
       emit(UpdateUserErrorState(onError.toString()));
@@ -155,4 +157,26 @@ class HomeCubit extends Cubit<HomeStates> {
     });
   }
 
+  bool isDarkCubit = CacheHelper.getData(key: 'isDark');
+  void changeThemeMode({bool? fromShared}){
+    if(fromShared != null){
+      isDark = !fromShared;
+      isDarkCubit = isDark;
+      CacheHelper.saveData(key: 'isDark', value: isDark).then((onValue){
+        emit(ChangeThemeModeSuccessState());
+        print('$isDark inside if(fromShared != null) mode');
+      }).catchError((onError){
+        emit(ChangeThemeModeErrorState());
+      });
+    }else{
+      isDark = !isDark;
+      isDarkCubit = isDark;
+      CacheHelper.saveData(key: 'isDark', value: isDark).then((onValue){
+        emit(ChangeThemeModeSuccessState());
+        print('$isDark inside then mode else');
+      }).catchError((onError){
+        emit(ChangeThemeModeErrorState());
+      });
+    }
+  }
 }

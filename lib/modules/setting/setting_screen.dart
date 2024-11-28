@@ -86,6 +86,7 @@ class SettingScreen extends StatelessWidget {
                         function: (){
                           FocusScope.of(context).unfocus();
                           if(formKey.currentState!.validate()){
+                            print('inside update Button');
                             HomeCubit.get(context).updateUserData(
                               name: nameController.text,
                               email: emailController.text,

@@ -3,7 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shoping/layouts/shop_layout/cubit_home/cubit_home.dart';
 import 'package:shoping/layouts/shop_layout/cubit_home/home_states.dart';
 import 'package:shoping/modules/search/search_screen.dart';
+import 'package:shoping/shared/networks/local/cache_helper.dart';
 import '../../shared/components/components.dart';
+import '../../shared/components/constants.dart';
 
 class HomeLayout extends StatelessWidget {
   const HomeLayout({super.key});
@@ -26,6 +28,14 @@ class HomeLayout extends StatelessWidget {
                 icon: const Icon(
                   Icons.search,
                 ),
+              ),
+              SizedBox(width: 15,),
+              IconButton(onPressed: (){
+                cubit.changeThemeMode(fromShared: CacheHelper.getData(key: 'isDark'));
+                print(CacheHelper.getData(key: 'isDark'));
+              }, icon: isDark
+                  ? Icon(Icons.brightness_2,)
+                  : Icon(Icons.brightness_4,),
               ),
             ],
           ),
