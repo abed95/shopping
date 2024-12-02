@@ -48,7 +48,8 @@ class SearchScreen extends StatelessWidget {
                     child: ListView.separated(
                       physics: BouncingScrollPhysics(),
                       itemBuilder: (context,index)
-                      =>buildProductItem(SearchCubit.get(context).model!.data!.data![index],context,isOldPrice:false),
+                      =>buildProductItem(
+                          SearchCubit.get(context).model!.data!.data![index],context,isOldPrice:false),
                       separatorBuilder: (context,index)=>myDivider(),
                       itemCount: SearchCubit.get(context).model!.data!.data!.length,
                     ),

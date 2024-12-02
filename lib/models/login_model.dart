@@ -9,6 +9,13 @@ class LoginModel {
     data = json['data'] != null ? UserData.fromJson(json['data']) :null;
   }
 
+  Map<String?, dynamic> toJson() {
+    return {
+      'status': status,
+      'message': message,
+      'data': data?.toJson(), // Serialize nested UserData
+    };
+  }
 
 }
 
@@ -33,6 +40,19 @@ class UserData{
     points = json['points'];
     credit = json['credit'];
     token = json['token'];
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'email': email,
+      'phone': phone,
+      'image': image,
+      'points': points,
+      'credit': credit,
+      'token': token,
+    };
   }
 
 }

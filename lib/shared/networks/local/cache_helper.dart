@@ -1,5 +1,9 @@
 
+import 'dart:convert';
+
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../../models/login_model.dart';
 
 class CacheHelper {
   static late SharedPreferences sharedPreference;
@@ -26,5 +30,21 @@ class CacheHelper {
   static Future<bool> removeData({required String key})async{
     return await sharedPreference.remove(key);
 }
+  static Future<void> saveUserData(LoginModel? user) async {
+    final prefs = await SharedPreferences.getInstance();
+    String userData = jsonEncode(user!.toJson()); // Convert to JSON
+    await prefs.setString('user_data', userData);
+  }
+
+  static Future<LoginModel?> getUserData() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? userData = prefs.getString('user_data');
+
+    if (userData != null) {
+      Map<String, dynamic> userMap = jsonDecode(userData); // Deserialize JSON
+      return LoginModel.fromJson(userMap);
+    }
+    return null;
+  }
 
 }

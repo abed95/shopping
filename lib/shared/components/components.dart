@@ -32,12 +32,14 @@ Widget buildBoardingItem(BoardingModel model) => Column(
       ],
     );
 
+//Navigate and kill the previous widget
 void navigateAndFinish(context, widget) => Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(builder: (context) => widget),
       (Route<dynamic> route) => false,
     );
 
+//Navigate and save the previous widget
 void navigateTo(context, widget) => Navigator.push(
     context,
     MaterialPageRoute(
@@ -121,8 +123,7 @@ Widget editTextForm({
 void showToast({
   required String? message,
   required ToastStates state,
-})=>
-    Fluttertoast.showToast(
+})=> Fluttertoast.showToast(
     msg: message,
     toastLength: Toast.LENGTH_LONG,
     gravity: ToastGravity.BOTTOM,
@@ -136,9 +137,7 @@ void showToast({
 enum ToastStates{SUCCESS,ERROR,WARNING}
 
 Color chooseToastColor(ToastStates state){
-
   Color color;
-
   switch(state){
     case ToastStates.SUCCESS:
       color = Colors.green;
@@ -235,7 +234,16 @@ Widget buildProductItem(model, context, {bool isOldPrice = true})=>Padding(
                       ),
                     ),
                   const Spacer(),
-                  IconButton(
+                  HomeCubit.get(context).loadingFavorites.contains(model.id)
+                      ? const SizedBox(
+                    width: 24,
+                    height: 24,
+                    child: CircularProgressIndicator(
+                      color: defaultColor,
+                      strokeWidth: 2,
+                    ),
+                  )
+                      : IconButton(
                     onPressed: () {
                       HomeCubit.get(context).changeFavorites(model.id);
                       print(model.id);
@@ -244,7 +252,8 @@ Widget buildProductItem(model, context, {bool isOldPrice = true})=>Padding(
                     icon: CircleAvatar(
                       radius: 15,
                       backgroundColor:
-                      HomeCubit.get(context).favorite[model.id] ?? false
+                      HomeCubit.get(context).favorite[model.id] ??
+                          false
                           ? defaultColor
                           : Colors.grey,
                       child: const Icon(

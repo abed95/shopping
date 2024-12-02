@@ -32,8 +32,6 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // create all providers when run the app for the first time
-    bool insideMainMode = CacheHelper.getData(key: 'isDark');
-    print('$insideMainMode insideMainMode');
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (context) => ShopLoginCubit()),
@@ -44,10 +42,12 @@ class MyApp extends StatelessWidget {
               ..getHomeData()
               ..getCategoriesData()
               ..getFavoriteData()
-              ..getUserData()),
+              ..getUserData()
+        ),
       ],
       child: BlocConsumer<HomeCubit,HomeStates>(
-        listener: (context,state){},
+        listener: (context,state){
+        },
         builder: (context,state){
           return MaterialApp(
             debugShowCheckedModeBanner: false,
@@ -60,7 +60,6 @@ class MyApp extends StatelessWidget {
           );
         },
       ),
-
     );
   }
 }

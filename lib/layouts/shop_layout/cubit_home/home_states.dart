@@ -38,7 +38,7 @@ class ChangeFavoriteErrorState extends HomeStates{
 class GetFavoritesSuccessState extends HomeStates{}
 class GetFavoritesLoadingState extends HomeStates{}
 class GetFavoritesErrorState extends HomeStates {
-  final String error;
+  final String? error;
   GetFavoritesErrorState(this.error);
 }
 

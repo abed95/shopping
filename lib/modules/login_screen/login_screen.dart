@@ -30,10 +30,14 @@ class LoginScreen extends StatelessWidget {
                 value: state.loginModel?.data?.token,)
                 .then((onValue){
                   token = state.loginModel!.data!.token!;
-                  navigateAndFinish(context, HomeLayout(),);
-                  showToast(message: state.loginModel?.message, state: ToastStates.SUCCESS);
             }).catchError((onError){
-              print({'The error is :',onError});
+              print({'The error is 36 LoginScreen:',onError});
+            });
+            CacheHelper.saveUserData(state.loginModel).then((onValue){
+              navigateAndFinish(context, HomeLayout(),);
+              showToast(message: state.loginModel?.message, state: ToastStates.SUCCESS);
+            }).catchError((onError){
+              showToast(message: state.loginModel?.message, state: ToastStates.ERROR);
             });
           }else{
             print({'The Status of request is :',state});

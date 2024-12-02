@@ -1,6 +1,5 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shoping/layouts/shop_layout/cubit_home/cubit_home.dart';
@@ -17,8 +16,8 @@ class ProductsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocConsumer<HomeCubit, HomeStates>(
       listener: (context, state) {
-        if(state is ChangeFavoriteSuccessState){
-          if(!state.model!.status){
+        if (state is ChangeFavoriteSuccessState) {
+          if (!state.model!.status) {
             showToast(message: state.model!.message, state: ToastStates.ERROR);
           }
         }
@@ -27,8 +26,8 @@ class ProductsScreen extends StatelessWidget {
         var cubit = HomeCubit.get(context);
         return ConditionalBuilder(
             condition: cubit.homeModel != null && cubit.categoriesModel != null,
-            builder: (context) =>
-                productBuilder(cubit.homeModel, cubit.categoriesModel, context),
+            builder: (context) => productBuilder(
+                cubit.homeModel, cubit.categoriesModel, context, state),
             fallback: (context) => const Center(
                     child: CircularProgressIndicator(
                   color: defaultColor,
@@ -37,8 +36,8 @@ class ProductsScreen extends StatelessWidget {
     );
   }
 
-  Widget productBuilder(
-          HomeModel? homeModel, CategoriesModel? categoriesModel, context) =>
+  Widget productBuilder(HomeModel? homeModel, CategoriesModel? categoriesModel,
+          context, state) =>
       SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         child: Column(
@@ -120,8 +119,8 @@ class ProductsScreen extends StatelessWidget {
               crossAxisCount: 2,
               children: List.generate(
                 homeModel!.data!.products!.length,
-                (index) =>
-                    buildGridProduct(homeModel.data!.products![index], context),
+                (index) => buildGridProduct(
+                    homeModel.data!.products![index], context, state),
               ),
             ),
           ],
@@ -129,44 +128,52 @@ class ProductsScreen extends StatelessWidget {
       );
 }
 
-Widget buildGridProduct(ProductModel model, context) => Column(
+Widget buildGridProduct(ProductModel model, context, state) => Column(
       crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
       children: [
-        Stack(alignment: AlignmentDirectional.bottomStart, children: [
-          Image(
-            image: NetworkImage(
-              model.image ?? '',
-            ),
-            width: double.infinity,
-            height: 200,
-          ),
-          if (model.discount != 0)
-            Container(
-              color: Colors.red,
-              padding: const EdgeInsets.symmetric(
-                horizontal: 5,
+        Stack(
+          alignment: AlignmentDirectional.bottomStart,
+          children: [
+            Image(
+              image: NetworkImage(
+                model.image ?? '',
               ),
-              child: const Text(
-                'Discount',
-                style: TextStyle(
-                  fontSize: 8.0,
-                  color: Colors.white,
+              width: double.infinity,
+              height: 200,
+            ),
+            if (model.discount != 0)
+              Container(
+                color: Colors.red,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 5,
+                ),
+                child: const Text(
+                  'Discount',
+                  style: TextStyle(
+                    fontSize: 8.0,
+                    color: Colors.white,
+                  ),
                 ),
               ),
-            ),
-        ]),
+          ],
+        ),
         Padding(
           padding: const EdgeInsets.all(12.0),
           child: Column(
+            mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                model.name ?? '',
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
-                  fontSize: 14,
-                  height: 1.3,
+              Container(
+                height: 40,
+                child: Text(
+                  model.name ?? '',
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    height: 1.3,
+                  ),
                 ),
               ),
               Row(
@@ -179,7 +186,7 @@ Widget buildGridProduct(ProductModel model, context) => Column(
                     ),
                   ),
                   const SizedBox(
-                    width: 10,
+                    width: 15,
                   ),
                   if (model.discount != 0)
                     Text(
@@ -191,25 +198,35 @@ Widget buildGridProduct(ProductModel model, context) => Column(
                       ),
                     ),
                   const Spacer(),
-                  IconButton(
-                    onPressed: () {
-                      HomeCubit.get(context).changeFavorites(model.id);
-                      print(model.id);
-                    },
-                    padding: EdgeInsets.zero,
-                    icon: CircleAvatar(
-                      radius: 15,
-                      backgroundColor:
-                          HomeCubit.get(context).favorite[model.id] ?? false
-                              ? defaultColor
-                              : Colors.grey,
-                      child: const Icon(
-                        Icons.favorite_border_outlined,
-                        size: 14,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
+                  HomeCubit.get(context).loadingFavorites.contains(model.id)
+                      ? const SizedBox(
+                          width: 24,
+                          height: 24,
+                          child: CircularProgressIndicator(
+                            color: defaultColor,
+                            strokeWidth: 2,
+                          ),
+                        )
+                      : IconButton(
+                          onPressed: () {
+                            HomeCubit.get(context).changeFavorites(model.id);
+                            print(model.id);
+                          },
+                          padding: EdgeInsets.zero,
+                          icon: CircleAvatar(
+                            radius: 15,
+                            backgroundColor:
+                                HomeCubit.get(context).favorite[model.id] ??
+                                        false
+                                    ? defaultColor
+                                    : Colors.grey,
+                            child: const Icon(
+                              Icons.favorite_border_outlined,
+                              size: 14,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
                 ],
               ),
             ],

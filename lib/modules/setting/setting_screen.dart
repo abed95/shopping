@@ -6,10 +6,8 @@ import 'package:shoping/layouts/shop_layout/cubit_home/home_states.dart';
 import 'package:shoping/shared/components/constants.dart';
 import 'package:shoping/shared/networks/local/cache_helper.dart';
 import 'package:shoping/shared/styles/colors.dart';
-
 import '../../models/login_model.dart';
 import '../../shared/components/components.dart';
-import '../login_screen/login_screen.dart';
 
 class SettingScreen extends StatelessWidget {
   var formKey = GlobalKey<FormState>();
@@ -22,29 +20,35 @@ class SettingScreen extends StatelessWidget {
     return BlocConsumer<HomeCubit,HomeStates>(
       listener: (context,state){
         if(state is GetUserSuccessState){
-          nameController.text = state.userModel!.data!.name!;
-          emailController.text = state.userModel!.data!.email!;
-          phoneController.text = state.userModel!.data!.phone!;
+           nameController.text = state.userModel!.data!.name!;
+           emailController.text = state.userModel!.data!.email!;
+           phoneController.text = state.userModel!.data!.phone!;
+           print('if(state is GetUserSuccessState $nameController');
         }
       },
       builder: (context,state){
-        var cubit = HomeCubit.get(context);
-        LoginModel? model = cubit.userModel;
+        if(state is GetUserSuccessState) {
+          var cubit = HomeCubit
+              .get(context)
+              .userModel;
+          nameController.text = cubit!.data!.name!;
+          emailController.text = cubit.data!.email!;
+          phoneController.text = cubit.data!.phone!;
+          print('if(state is GetUserSuccessState $nameController');
+        }
+        if(state is GetUserErrorState){
+          CacheHelper.getUserData().then((onValue){
+            nameController.text = onValue!.data!.name!;
+            emailController.text = onValue.data!.email!;
+            phoneController.text = onValue.data!.phone!;
 
-        if (model == null) {
-          return Center(child: CircularProgressIndicator(color: defaultColor,)); // or any loading widget
+          }).catchError((onError){
+
+          });
         }
 
-         // (model != null && model.data != null)
-        nameController.text = model.data!.name! ??'';
-        emailController.text = model.data!.email! ?? '';
-        phoneController.text = model.data!.phone! ?? '';
-
-        return GestureDetector(
-          onTap: (){
-            FocusScope.of(context).unfocus();
-          },
-          child: Padding(
+        return state is GetUserLoadingState ? Center(child: Text('Loading data')):
+          Padding(
             padding: const EdgeInsets.all(20.0),
             child: Form(
               key: formKey,
@@ -61,6 +65,7 @@ class SettingScreen extends StatelessWidget {
                       if (value!.isEmpty) {
                         return 'Name must not be empty';
                       }
+                      return null;
                     },
                   ),
                   SizedBox(height: 20,),
@@ -72,6 +77,7 @@ class SettingScreen extends StatelessWidget {
                       if (value!.isEmpty) {
                         return 'Email must not be empty';
                       }
+                      return null;
                     },
                   ),
                   SizedBox(height: 20,),
@@ -80,16 +86,17 @@ class SettingScreen extends StatelessWidget {
                     label: 'Phone',
                     prefixIcon: Icons.phone,
                     validator: (String? value) {
-                      if (value!.isEmpty) {
+                      if (value!.isEmpty ?? true) {
                         return 'Phone must not be empty';
                       }
+                      return null;
                     },
                   ),
                   SizedBox(height: 20,),
                   defaultButton(
-                      function: (){
+                      function: () {
                         FocusScope.of(context).unfocus();
-                        if(formKey.currentState!.validate()){
+                        if (formKey.currentState!.validate()) {
                           print('inside update Button');
                           HomeCubit.get(context).updateUserData(
                             name: nameController.text,
@@ -102,7 +109,7 @@ class SettingScreen extends StatelessWidget {
                   ),
                   SizedBox(height: 20,),
                   defaultButton(
-                      function: (){
+                      function: () {
                         FocusScope.of(context).unfocus();
                         signOut(context);
                       },
@@ -111,87 +118,8 @@ class SettingScreen extends StatelessWidget {
                 ],
               ),
             ),
-          ),
-        );
-
-        // return ConditionalBuilder(
-        //   condition: cubit.userModel != null,
-        //   builder: (context)=>GestureDetector(
-        //     onTap: (){
-        //       FocusScope.of(context).unfocus();
-        //     },
-        //     child: Padding(
-        //       padding: const EdgeInsets.all(20.0),
-        //       child: Form(
-        //         key: formKey,
-        //         child: Column(
-        //           children: [
-        //             if(state is UpdateUserLoadingState)
-        //             LinearProgressIndicator(color: defaultColor,),
-        //             SizedBox(height: 20,),
-        //             editTextForm(
-        //               controller: nameController,
-        //               label: 'Name',
-        //               prefixIcon: Icons.person,
-        //               validator: (String? value) {
-        //                 if (value!.isEmpty) {
-        //                   return 'Name must not be empty';
-        //                 }
-        //               },
-        //             ),
-        //             SizedBox(height: 20,),
-        //             editTextForm(
-        //               controller: emailController,
-        //               label: 'Email address',
-        //               prefixIcon: Icons.email_outlined,
-        //               validator: (String? value) {
-        //                 if (value!.isEmpty) {
-        //                   return 'Email must not be empty';
-        //                 }
-        //               },
-        //             ),
-        //             SizedBox(height: 20,),
-        //             editTextForm(
-        //               controller: phoneController,
-        //               label: 'Phone',
-        //               prefixIcon: Icons.phone,
-        //               validator: (String? value) {
-        //                 if (value!.isEmpty) {
-        //                   return 'Phone must not be empty';
-        //                 }
-        //               },
-        //             ),
-        //             SizedBox(height: 20,),
-        //             defaultButton(
-        //                 function: (){
-        //                   FocusScope.of(context).unfocus();
-        //                   if(formKey.currentState!.validate()){
-        //                     print('inside update Button');
-        //                     HomeCubit.get(context).updateUserData(
-        //                       name: nameController.text,
-        //                       email: emailController.text,
-        //                       phone: phoneController.text,
-        //                     );
-        //                   }
-        //                   },
-        //                 text: 'update'
-        //             ),
-        //             SizedBox(height: 20,),
-        //             defaultButton(
-        //                 function: (){
-        //                   FocusScope.of(context).unfocus();
-        //                   signOut(context);
-        //                 },
-        //                 text: 'logout'
-        //             ),
-        //           ],
-        //         ),
-        //       ),
-        //     ),
-        //   ),
-        //   fallback: (context)=>Center(child: CircularProgressIndicator(color: defaultColor,),),
-        // );
-      },
+          );
+        },
     );
   }
 }

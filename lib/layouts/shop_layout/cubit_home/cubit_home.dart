@@ -46,21 +46,20 @@ class HomeCubit extends Cubit<HomeStates> {
       token: token,
     ).then((onValue) {
       homeModel = HomeModel.fromJson(onValue.data);
-      // print(homeModel!.status);
-      // printFullText(homeModel!.data!.banners?[4].image??'');
+      //to fill all favorite product
       homeModel!.data!.products!.forEach((element) {
         favorite.addAll({
-          element.id: element.favorites,
+          element.id : element.favorites,
         });
       });
-      print(favorite.toString());
+      print('getHomeData favorite data ==>${favorite.toString()}');
       emit(ProductsSuccessState());
     }).catchError((onError) {
       emit(ProductsErrorState(onError.toString()));
-      print(onError.toString());
+      print('print favorite Error ==> ${onError.toString()}');
     });
   }
-
+  
   //For Categories Data
   CategoriesModel? categoriesModel;
   void getCategoriesData() {
@@ -72,14 +71,16 @@ class HomeCubit extends Cubit<HomeStates> {
       emit(CategoriesSuccessState());
     }).catchError((onError) {
       emit(CategoriesErrorState(onError.toString()));
-      print(onError.toString());
+      print('getCategoriesData Error==> ${onError.toString()}');
     });
   }
 
   //Change Favorites
   ChangeFavoriteModel? changeFavoriteModel;
+  Set<int?> loadingFavorites = {};
   void changeFavorites(int? productId) {
     favorite[productId] = !favorite[productId]!;
+    loadingFavorites.add(productId); // Start loading
     emit(ChangeFavoriteState());
     DioHelper.postData(
       url: FAVORITES,
@@ -92,12 +93,14 @@ class HomeCubit extends Cubit<HomeStates> {
       }else{
         getFavoriteData();
       }
-      print(onValue.data);
+      loadingFavorites.remove(productId); // Stop loading
+      print('changeFavorites 95 then ==> ${onValue.data}');
       emit(ChangeFavoriteSuccessState(changeFavoriteModel));
     }).catchError((onError) {
       favorite[productId] = !favorite[productId]!;
+      loadingFavorites.remove(productId); // Stop loading
       emit(ChangeFavoriteErrorState(onError));
-      print(onError.toString());
+      print('changeFavorites 100 Error == > ${onError.toString()}');
     });
   }
 
@@ -111,9 +114,10 @@ class HomeCubit extends Cubit<HomeStates> {
     ).then((onValue) {
       favoriteModel = FavoriteModel.fromJson(onValue.data);
       emit(GetFavoritesSuccessState());
+      print('getFavoriteData ');
     }).catchError((onError) {
       emit(GetFavoritesErrorState(onError.toString()));
-      print(onError.toString());
+      print('GetFavoritesErrorState 116 ==> ${onError.toString()}');
     });
   }
 
@@ -123,13 +127,16 @@ class HomeCubit extends Cubit<HomeStates> {
     emit(GetUserLoadingState());
     DioHelper.getData(
       url: PROFILE,
-      token: token,
+      token: CacheHelper.getData(key: 'token'),
     ).then((onValue) {
       userModel = LoginModel.fromJson(onValue.data);
+      //print('getUserData 129 then ==> ${userModel.data}');
       emit(GetUserSuccessState(userModel));
+      print('getUserData 132 ${onValue.data}');
+      print(token);
     }).catchError((onError) {
       emit(GetUserErrorState(onError.toString()));
-      print(onError.toString());
+      print('getUserData 133 Error ==> ${onError.toString()}');
     });
   }
 
@@ -149,21 +156,21 @@ class HomeCubit extends Cubit<HomeStates> {
       }
     ).then((onValue) {
       userModel = LoginModel.fromJson(onValue.data);
-      print('inside update then ');
+      print('inside updateUserData then 153 $userModel');
       emit(UpdateUserSuccessState(userModel));
     }).catchError((onError) {
       emit(UpdateUserErrorState(onError.toString()));
-      print(onError.toString());
+      print('updateUserData ${onError.toString()}');
     });
   }
+
 //Change the mode theme
-  bool isDarkCubit = CacheHelper.getData(key: 'isDark');
+  bool isDarkCubit = false;
   void changeThemeMode({bool? fromShared}){
     if(fromShared != null){
       isDarkCubit = !fromShared;
       CacheHelper.saveData(key: 'isDark', value: isDarkCubit).then((onValue){
         emit(ChangeThemeModeSuccessState());
-        print('$isDarkCubit inside if(fromShared != null) mode');
       }).catchError((onError){
         emit(ChangeThemeModeErrorState());
       });
@@ -171,7 +178,6 @@ class HomeCubit extends Cubit<HomeStates> {
       isDarkCubit = !isDarkCubit;
       CacheHelper.saveData(key: 'isDark', value: isDarkCubit).then((onValue){
         emit(ChangeThemeModeSuccessState());
-        print('$isDarkCubit inside then mode else');
       }).catchError((onError){
         emit(ChangeThemeModeErrorState());
       });

@@ -33,6 +33,7 @@ class CategoriesScreen extends StatelessWidget {
 Widget buildCatItem(DataModel? model)=> Padding(
   padding: const EdgeInsets.all(20.0),
   child: Row(
+    mainAxisSize: MainAxisSize.max,
     children: [
       Image(image: NetworkImage(
         model!.image??'',
