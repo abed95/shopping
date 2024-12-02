@@ -47,4 +47,20 @@ class CacheHelper {
     return null;
   }
 
+ static Future<void> updateUserData({String? name, String? email, String? phone}) async {
+    // Step 1: Retrieve the current LoginModel from SharedPreferences
+    LoginModel? currentUser = await getUserData();
+
+    if (currentUser != null) {
+      // Step 2: Update the fields if new values are provided
+      currentUser.data?.name = name ?? currentUser.data?.name;
+      currentUser.data?.email = email ?? currentUser.data?.email;
+      currentUser.data?.phone = phone ?? currentUser.data?.phone;
+
+      // Step 3: Save the updated model back to SharedPreferences
+      await saveUserData(currentUser);
+    }
+  }
+
+
 }

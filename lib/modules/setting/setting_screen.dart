@@ -47,7 +47,7 @@ class SettingScreen extends StatelessWidget {
           });
         }
 
-        return state is GetUserLoadingState ? Center(child: Text('Loading data')):
+        return state is GetUserLoadingState ? const Center(child: Text('Loading data...')):
           Padding(
             padding: const EdgeInsets.all(20.0),
             child: Form(
@@ -55,8 +55,8 @@ class SettingScreen extends StatelessWidget {
               child: Column(
                 children: [
                   if(state is UpdateUserLoadingState)
-                    LinearProgressIndicator(color: defaultColor,),
-                  SizedBox(height: 20,),
+                    const LinearProgressIndicator(color: defaultColor,),
+                  const SizedBox(height: 20,),
                   editTextForm(
                     controller: nameController,
                     label: 'Name',
@@ -68,7 +68,7 @@ class SettingScreen extends StatelessWidget {
                       return null;
                     },
                   ),
-                  SizedBox(height: 20,),
+                  const SizedBox(height: 20,),
                   editTextForm(
                     controller: emailController,
                     label: 'Email address',
@@ -80,7 +80,7 @@ class SettingScreen extends StatelessWidget {
                       return null;
                     },
                   ),
-                  SizedBox(height: 20,),
+                  const SizedBox(height: 20,),
                   editTextForm(
                     controller: phoneController,
                     label: 'Phone',
@@ -92,7 +92,7 @@ class SettingScreen extends StatelessWidget {
                       return null;
                     },
                   ),
-                  SizedBox(height: 20,),
+                  const SizedBox(height: 20,),
                   defaultButton(
                       function: () {
                         FocusScope.of(context).unfocus();
@@ -103,11 +103,17 @@ class SettingScreen extends StatelessWidget {
                             email: emailController.text,
                             phone: phoneController.text,
                           );
+                          CacheHelper.updateUserData(
+                            name: nameController.text,
+                            email: emailController.text,
+                            phone: phoneController.text,
+                          );
                         }
+
                       },
                       text: 'update'
                   ),
-                  SizedBox(height: 20,),
+                  const SizedBox(height: 20,),
                   defaultButton(
                       function: () {
                         FocusScope.of(context).unfocus();
